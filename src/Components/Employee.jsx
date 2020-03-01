@@ -2,17 +2,27 @@ import React, { Component } from 'react';
 import '../StyleSheets/content.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit,faTrashAlt} from  '@fortawesome/free-solid-svg-icons'; 
+import axios from 'axios';
+import {NavLink} from 'react-router-dom';
 
 
 
 class Employee extends Component {
     state = { 
         name: 'Employee',
-        Employee: [{EmployeeID:1,EmployeeName:"Sohail",Department:'CS',Email:"sohailsaleem1998@gmail.com"}],
+        Employee: [],
  
      }
      componentDidMount(){
-     document.title=`${this.state.name} - POS`;      
+     document.title=`${this.state.name} - POS`;  
+     this.getEmployee();
+    }
+    getEmployee = () => {
+      axios.get("http://localhost:52385/api/Employee").then((response)=>{
+          this.setState({
+              Employee:response.data
+          })
+      })
     }
      showEmployee = () => {
          const {Employee} = this.state;
@@ -30,21 +40,21 @@ class Employee extends Component {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Department</th>
-                <th>Email</th>
+                <th>Salary</th>
                 <th>&nbsp;</th>
               </tr>
             </thead>
             <tbody>
                 {Employee.map(
-                    (emp,id) =>
-                    <tr key={id}>
-                        <td>{emp.EmployeeID}</td>
-                        <td>{emp.EmployeeName}</td>
-                        <td>{emp.Department}</td>
-                        <td>{emp.Email}</td>
+                    emp =>
+                    <tr key={emp.E_Id}>
+                        <td>{emp.E_Id}</td>
+                        <td>{emp.E_Name}</td>
+                        <td>{emp.E_Depart}</td>
+                        <td>{emp.E_Salary}</td>
                         <td>
-                            <span>{Edit}</span>
-                            <span>{Delete}</span> 
+                            <NavLink to={`/Employee/Update/${emp.E_Id}`}>{Edit}</NavLink>
+                            <NavLink to={`/Employee/Delete/${emp.E_Id}`}>{Delete}</NavLink>
                         </td>
                     </tr> 
                     
@@ -59,6 +69,8 @@ class Employee extends Component {
         return ( 
             <div className='main'>
                 <nav className="navbar navbar-light bg-light">
+                <NavLink to={`/Employee/Create`} className="btn btn-outline-dark" type="button">Add {this.state.name}</NavLink>
+
                 <form className='form-inline'>
                     <div className='form-group'>
                         <input  className='form-control' 
@@ -67,6 +79,7 @@ class Employee extends Component {
                         placeholder='Search Employee..'
                         />
                     </div>
+
                 </form>                
                 </nav>
                 <div className='container mt-4'>

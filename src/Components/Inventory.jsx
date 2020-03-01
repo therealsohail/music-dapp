@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import '../StyleSheets/content.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit,faTrashAlt} from  '@fortawesome/free-solid-svg-icons'; 
+import axios from 'axios';
+import {NavLink} from 'react-router-dom';
 
 
 
@@ -12,7 +14,16 @@ class Inventory extends Component {
  
      }
      componentDidMount(){
-     document.title=`${this.state.name} - POS`;      
+        document.title=`${this.state.name} - POS`;      
+        this.getInventory()
+    }
+    getInventory = () =>{
+        axios.get("http://localhost:52385/api/Inventory").then((response)=>{
+            console.log(response)
+            this.setState({
+                Inventory:response.data
+            })
+        })
     }
      showInventory = () => {
          const {Inventory} = this.state;
@@ -23,28 +34,31 @@ class Inventory extends Component {
                 <h6 className='alert alert-warning mt-4'>You have 0 Inventory, Start Adding them!</h6>
             )
          }
+        
          return(
             <table class="table table-striped table-hover mt-4">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Department</th>
-                <th>Email</th>
+                <th>isProduct</th>
+                <th>Price</th>
+                <th>Quantity</th>
                 <th>&nbsp;</th>
               </tr>
             </thead>
             <tbody>
                 {Inventory.map(
-                    (emp,id) =>
-                    <tr key={id}>
-                        <td>{emp.InventoryID}</td>
-                        <td>{emp.InventoryName}</td>
-                        <td>{emp.Department}</td>
-                        <td>{emp.Email}</td>
+                    (inv) =>
+                    <tr key={inv.I_Id}>
+                        <td>{inv.I_Id}</td>
+                        <td>{inv.I_Name}</td>
+                        <td>{inv.isProduct}</td>
+                        <td>{inv.I_Price}</td>
+                        <td>{inv.I_Quantity}</td>
                         <td>
-                            <span>{Edit}</span>
-                            <span>{Delete}</span> 
+                            <NavLink to={`/Inventory/Update/${inv.I_Id}`}>{Edit}</NavLink>
+                            <NavLink to={`/Inventory/Delete/${inv.I_Id}`}>{Delete}</NavLink> 
                         </td>
                     </tr> 
                     
@@ -59,6 +73,8 @@ class Inventory extends Component {
         return ( 
             <div className='main'>
                 <nav className="navbar navbar-light bg-light">
+                <NavLink to={`/Inventory/Create`} className="btn btn-outline-dark" type="button">Add {this.state.name}</NavLink>
+
                 <form className='form-inline'>
                     <div className='form-group'>
                         <input  className='form-control' 
