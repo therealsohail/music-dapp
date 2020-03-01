@@ -15,7 +15,7 @@ class SideBar extends Component {
         let Salary = <FontAwesomeIcon icon={faMoneyBillAlt} size='sm mr-2'/>
         return ( 
             <div className='Sidebar'>
-                <h3>CURD APP</h3>
+                <h3>POS</h3>
                 <NavLink activeClassName='activate' className='a' to='/' exact>{Employee}Employee</NavLink>
                 <NavLink activeClassName='activate' className='a' to='/Inventory'>{Inventory}Inventory</NavLink>
                 <NavLink activeClassName='activate' className='a' to='/Products'>{Product}Product</NavLink>

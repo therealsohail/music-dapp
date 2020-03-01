@@ -1,18 +1,28 @@
 import React, { Component } from 'react';
 import '../StyleSheets/content.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faEdit,faTrashAlt} from  '@fortawesome/free-solid-svg-icons'; 
+import {faEdit,faTrashAlt, faBatteryEmpty} from  '@fortawesome/free-solid-svg-icons'; 
+import axios from 'axios';
 
 
 
 class Revenue extends Component {
     state = { 
         name: 'Revenue',
-        Revenue: [],
+        Revenue: {},
  
      }
      componentDidMount(){
      document.title=`${this.state.name} - POS`;      
+     this.getRevenue();
+    }
+    getRevenue = () =>{
+        axios.get("http://localhost:52385/api/Revenue").then(response =>{
+            const resArray = response.data;
+            const revObj = resArray.pop()
+            console.log(revObj)
+            this.setState({Revenue: revObj})
+        })
     }
      showRevenue = () => {
          const {Revenue} = this.state;
@@ -24,33 +34,12 @@ class Revenue extends Component {
             )
          }
          return(
-            <table class="table table-striped table-hover mt-4">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Email</th>
-                <th>&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-                {Revenue.map(
-                    (emp,id) =>
-                    <tr key={id}>
-                        <td>{emp.RevenueID}</td>
-                        <td>{emp.RevenueName}</td>
-                        <td>{emp.Department}</td>
-                        <td>{emp.Email}</td>
-                        <td>
-                            <span>{Edit}</span>
-                            <span>{Delete}</span> 
-                        </td>
-                    </tr> 
-                    
-                )}
-            </tbody>
-          </table>
+            <div style={{width: 500}}className="alert alert-success mt-4" role="alert">
+                <h3 className="alert-heading">$ {Revenue.Funds}</h3>
+                <p>Our goal is long term growth in revenue…so we invest aggressively in future innovation while tightly managing our short term costs..</p>
+                <hr/>
+                <p className="mb-0">Success is not final. failure is not fatal. It is the courage to continue that counts.</p>
+            </div>
          );
      }
 

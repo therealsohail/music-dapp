@@ -11,12 +11,22 @@ class updateInventory extends Component {
         I_Name: "",
         isProduct:null,
         I_Price: null,
-        I_Quantity: null 
+        I_Quantity: null,
+        notification:null 
      }
      
      componentDidMount(){
      document.title=`${this.state.name} - POS`;  
      this.getInventory();
+    }
+    notify=()=>{
+        if(this.state.notification !== null){
+            return(
+                <div class="alert alert-primary mt-4" role="alert">
+                    {this.state.notification}
+                </div>
+            )
+        }
     }
     getInventory = () =>{
         const pathname = window.location.pathname.split("/")
@@ -43,13 +53,15 @@ class updateInventory extends Component {
         })
     }
     handleSubmit = (e) =>{
-        e.preventDefault();
-        console.log("clicked");
-        
+        e.preventDefault();        
         const pathname = window.location.pathname.split("/")
         const id = pathname[3];
         axios.put(`http://localhost:52385/api/Inventory/${id}`,this.state).then(response=>{
-            console.log(response)
+            if(response.data){
+                this.setState({
+                    notification:response.data
+                })
+            }
         })
     }
     render() { 
@@ -91,6 +103,7 @@ class updateInventory extends Component {
                         </div>
                         <button type="submit" className ="btn btn-primary" onClick={this.click}> Update </button>
                     </form>
+                    {this.notify()}
                 </div> 
             </div>
          );

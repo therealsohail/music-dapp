@@ -12,7 +12,8 @@ class createInventory extends Component {
         I_Name: "",
         isProduct:null,
         I_Price: null,
-        I_Quantity: null 
+        I_Quantity: null ,
+        notification: null
      }
      
      componentDidMount(){
@@ -24,12 +25,25 @@ class createInventory extends Component {
             [e.target.name] : e.target.value
         })
     }
+    notify=()=>{
+        if(this.state.notification !== null){
+            return(
+                <div class="alert alert-primary mt-4" role="alert">
+                    {this.state.notification}
+                </div>
+            )
+        }
+    }
     handleSubmit = (e) =>{
         e.preventDefault();        
         const pathname = window.location.pathname.split("/")
         const id = pathname[3];
         axios.post(`http://localhost:52385/api/Inventory/${id}`,this.state).then(response=>{
-            console.log(response)
+            if(response.data){
+                this.setState({
+                    notification:response.data
+                })
+            }
         })
     }
     render() { 
@@ -69,8 +83,9 @@ class createInventory extends Component {
                             <input onChange={this.handleChange} 
                             name="I_Quantity" type="text" value={this.state.I_Quantity} className="form-control"/>
                         </div>
-                        <button type="submit" className ="btn btn-primary" onClick={this.click}> Update </button>
+                        <button type="submit" className ="btn btn-primary" onClick={this.click}> Add </button>
                     </form>
+                    {this.notify()}
                 </div> 
             </div>
          );

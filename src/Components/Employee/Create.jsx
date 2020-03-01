@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import '../../StyleSheets/content.css';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faEdit,faTrashAlt} from  '@fortawesome/free-solid-svg-icons'; 
 import axios from 'axios';
-import {NavLink} from 'react-router-dom';
-
 
 
 class createEmployee extends Component {
@@ -13,13 +9,22 @@ class createEmployee extends Component {
         E_Id: null,
         E_Name: "",
         E_Depart:"",
-        E_Salary: null 
+        E_Salary: null,
+        notification:null
      }
      
      componentDidMount(){
      document.title=`${this.state.name} - POS`;  
     }
-
+    notify=()=>{
+        if(this.state.notification !== null){
+            return(
+                <div class="alert alert-primary mt-4" role="alert">
+                    {this.state.notification}
+                </div>
+            )
+        }
+    }
     handleChange = (e) =>{
         this.setState({
             [e.target.name] : e.target.value
@@ -30,7 +35,11 @@ class createEmployee extends Component {
         const pathname = window.location.pathname.split("/")
         const id = pathname[3];
         axios.post(`http://localhost:52385/api/Employee/${id}`,this.state).then(response=>{
-            console.log(response)
+            if(response.data){
+                this.setState({
+                    notification:response.data
+                })
+            }
         })
     }
     render() { 
@@ -65,8 +74,9 @@ class createEmployee extends Component {
                             <input onChange={this.handleChange} 
                             name="E_Salary" type="text" value={this.state.E_Salary} className="form-control"/>
                         </div>
-                        <button type="submit" className ="btn btn-primary" onClick={this.click}> Update </button>
+                        <button type="submit" className ="btn btn-primary" onClick={this.click}> Add </button>
                     </form>
+                    {this.notify()}
                 </div> 
             </div>
          );

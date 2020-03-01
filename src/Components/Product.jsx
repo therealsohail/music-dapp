@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import '../StyleSheets/content.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faEdit,faTrashAlt} from  '@fortawesome/free-solid-svg-icons'; 
-
+import {faCashRegister} from  '@fortawesome/free-solid-svg-icons'; 
+import axios from 'axios';
+import {NavLink} from 'react-router-dom';
 
 
 class Product extends Component {
@@ -12,12 +13,20 @@ class Product extends Component {
  
      }
      componentDidMount(){
-     document.title=`${this.state.name} - POS`;      
+     document.title=`${this.state.name} - POS`;    
+     this.getProduct();  
+    }
+    getProduct = () =>{
+        axios.get("http://localhost:52385/api/Product").then((response)=>{
+            console.log(response)
+            this.setState({
+                Product:response.data
+            })
+        })
     }
      showProduct = () => {
          const {Product} = this.state;
-         const Edit = <FontAwesomeIcon  className ='text-primary' icon={faEdit} size ='md mr-3'/>
-         const Delete = <FontAwesomeIcon className ='text-danger' icon={faTrashAlt} size ='md mr-3'/>
+         const Edit = <FontAwesomeIcon  className ='text-info' icon={faCashRegister} size ='md mr-3'/>
          if(Product.length === 0){
             return(
                 <h6 className='alert alert-warning mt-4'>You have 0 Product, Start Adding them!</h6>
@@ -29,22 +38,23 @@ class Product extends Component {
               <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Department</th>
-                <th>Email</th>
-                <th>&nbsp;</th>
+                <th>isProduct</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Sell</th>
               </tr>
             </thead>
             <tbody>
                 {Product.map(
-                    (emp,id) =>
-                    <tr key={id}>
-                        <td>{emp.ProductID}</td>
-                        <td>{emp.ProductName}</td>
-                        <td>{emp.Department}</td>
-                        <td>{emp.Email}</td>
+                    (inv) =>
+                    <tr key={inv.I_Id}>
+                        <td>{inv.I_Id}</td>
+                        <td>{inv.I_Name}</td>
+                        <td>{inv.isProduct}</td>
+                        <td>{inv.I_Price}</td>
+                        <td>{inv.I_Quantity}</td>
                         <td>
-                            <span>{Edit}</span>
-                            <span>{Delete}</span> 
+                            <NavLink to={`/Sales/${inv.I_Id}`}>{Edit}</NavLink>
                         </td>
                     </tr> 
                     

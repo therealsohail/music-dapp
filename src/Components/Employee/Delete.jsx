@@ -13,13 +13,22 @@ class deleteEmployee extends Component {
         E_Id: null,
         E_Name: "",
         E_Depart:"",
-        E_Salary: null 
+        E_Salary: null,
+        notification:null 
      }
      
      componentDidMount(){
      document.title=`${this.state.name} - POS`;  
     }
-    
+    notify=()=>{
+        if(this.state.notification !== null){
+            return(
+                <div class="alert alert-danger mt-4" role="alert">
+                    {this.state.notification}
+                </div>
+            )
+        }
+    }
 
     handleSubmit = (e) =>{
         e.preventDefault();
@@ -28,8 +37,12 @@ class deleteEmployee extends Component {
         const pathname = window.location.pathname.split("/")
         const id = pathname[3];
         console.log(id)
-        axios.delete(`http://localhost:52385/api/Employee/${id}`).then(res=>{
-            console.log(res)
+        axios.delete(`http://localhost:52385/api/Employee/${id}`).then(response=>{
+            if(response.data){
+                this.setState({
+                    notification:response.data
+                })
+            }
         })
     }
     render() { 
@@ -49,8 +62,8 @@ class deleteEmployee extends Component {
                 <div className='container mt-4'>
                     <h3>Delete {this.state.name}</h3>
                     <h5>Are you sure?</h5>
-                    <button  onClick={this.handleSubmit}  type="button" className ="btn btn-danger"> Delete </button>
-
+                    <button  onClick={this.handleSubmit}  type="button" className ="btn btn-danger mt-2"> Delete </button>
+                    {this.notify()}
                 </div> 
             </div>
          );
