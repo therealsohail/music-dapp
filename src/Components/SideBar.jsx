@@ -30,7 +30,7 @@ class SideBar extends Component {
         <NavLink activeClassName="activate" className="a" to="/Download">
           {Product}Download
         </NavLink>
-        <NavLink activeClassName="activate" className="a" to="/DownloadCount">
+        {/* <NavLink activeClassName="activate" className="a" to="/DownloadCount">
           {Sale}Download Count
         </NavLink>
         <NavLink activeClassName="activate" className="a" to="/Salary">
@@ -38,7 +38,7 @@ class SideBar extends Component {
         </NavLink>
         <NavLink activeClassName="activate" className="a" to="/Revenue">
           {Product}Revenue
-        </NavLink>
+        </NavLink> */}
       </div>
     );
   }
